@@ -1,0 +1,13 @@
+Metadata-Version: 2.4
+Name: marl-games
+Version: 0.1.0
+Summary: Add your description here
+Requires-Python: >=3.13
+Description-Content-Type: text/markdown
+Requires-Dist: pettingzoo>=1.25.0
+Requires-Dist: pygame>=2.6.1
+Requires-Dist: sb3-contrib>=2.7.0
+Requires-Dist: stable-baselines3>=2.7.0
+
+# marl-games
+Implementing Multi-Agent RL solutions to games

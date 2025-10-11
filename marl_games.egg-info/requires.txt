@@ -1,0 +1,4 @@
+pettingzoo>=1.25.0
+pygame>=2.6.1
+sb3-contrib>=2.7.0
+stable-baselines3>=2.7.0
