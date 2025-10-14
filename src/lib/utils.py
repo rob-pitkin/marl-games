@@ -62,3 +62,10 @@ class SB3ActionMaskWrapper(pettingzoo.utils.BaseWrapper, gym.Env):
         Separate function used in order to access the action mask.
         """
         return super().observe(self.agent_selection)["action_mask"]
+
+
+def mask_fn(env):
+    """
+    Helper function to pass in for the ActionMasker wrapper for pettingzoo environments.
+    """
+    return env.action_mask()

@@ -5,10 +5,15 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "pettingzoo>=1.25.0",
+    "fastapi>=0.119.0",
+    "httpx>=0.28.1",
+    "pettingzoo[classic]>=1.25.0",
     "pygame>=2.6.1",
+    "pytest>=8.4.2",
+    "python-multipart>=0.0.20",
     "sb3-contrib>=2.7.0",
     "stable-baselines3>=2.7.0",
+    "uvicorn[standard]>=0.37.0",
 ]
 
 [tool.setuptools.packages.find]
