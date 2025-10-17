@@ -31,8 +31,6 @@ def create_mock_model() -> Mock:
 class TestGameSession:
     """Test suite for GameSession class."""
 
-    # TODO(human): Implement the test bodies below
-
     @patch("src.backend.game_manager.connect_four_v3")
     @patch("src.backend.game_manager.MaskablePPO")
     @patch("os.path.getctime")
@@ -41,7 +39,7 @@ class TestGameSession:
         self, mock_glob, mock_getctime, mock_ppo_class, mock_cf
     ):
         """Test GameSession initializes correctly for Connect Four."""
-        # TODO(human): Verify session_id is a valid UUID string, game_type is set,
+        # Verify session_id is a valid UUID string, game_type is set,
         # environment is created and reset, and model is loaded
 
         # mock the call to glob.glob for finding the filepath to the latest model
@@ -76,7 +74,7 @@ class TestGameSession:
         self, mock_glob, mock_getctime, mock_ppo_class, mock_chess
     ):
         """Test GameSession initializes correctly for Chess."""
-        # TODO(human): Similar to connect_four test but for chess_v6
+        # Similar to connect_four test but for chess_v6
         # mock the call to glob.glob for finding the filepath to the latest model
         mock_glob.return_value = ["checkpoints/chess_v6/test.zip"]
         mock_getctime.return_value = 123456789
@@ -102,7 +100,7 @@ class TestGameSession:
 
     def test_serialize_value_numpy_array(self):
         """Test _serialize_value converts numpy arrays to lists."""
-        # TODO(human): Create a numpy array and verify it returns a Python list
+        # Create a numpy array and verify it returns a Python list
         test_array = np.array([[1, 2, 3], [4, 5, 6]])
         result = GameSession._serialize_value(test_array)
         assert isinstance(result, list)
@@ -110,7 +108,7 @@ class TestGameSession:
 
     def test_serialize_value_numpy_integer(self):
         """Test _serialize_value converts numpy integers to Python int."""
-        # TODO(human): Test with np.int32, np.int64, etc.
+        # Test with np.int32, np.int64, etc.
         test_int = np.int32(1)
         test_long = np.int64(2)
         result_1 = GameSession._serialize_value(test_int)
@@ -122,7 +120,7 @@ class TestGameSession:
 
     def test_serialize_value_numpy_float(self):
         """Test _serialize_value converts numpy floats to Python float."""
-        # TODO(human): Test with np.float32, np.float64, etc.
+        # Test with np.float32, np.float64, etc.
         test_float = np.float32(1)
         test_double = np.float64(2)
         result_1 = GameSession._serialize_value(test_float)
@@ -134,7 +132,7 @@ class TestGameSession:
 
     def test_serialize_value_python_native_types(self):
         """Test _serialize_value passes through Python native types unchanged."""
-        # TODO(human): Test with int, float, str, list, dict
+        # Test with int, float, str, list, dict
         test_int = 1
         test_float = 2.0
         test_str = "test"
@@ -160,9 +158,11 @@ class TestGameSession:
     @patch("src.backend.game_manager.MaskablePPO")
     @patch("os.path.getctime")
     @patch("glob.glob")
-    def test_get_current_state_active_game(self, mock_glob, mock_getctime, mock_ppo_class, mock_cf):
+    def test_get_current_state_active_game(
+        self, mock_glob, mock_getctime, mock_ppo_class, mock_cf
+    ):
         """Test get_current_state returns correct structure for active game."""
-        # TODO(human): Verify the returned dict has all required keys and correct types
+        # Verify the returned dict has all required keys and correct types
         # Check that numpy arrays are serialized to lists
         # mock the call to glob.glob for finding the filepath to the latest model
         mock_glob.return_value = ["checkpoints/connect_four_v3/test.zip"]
@@ -212,9 +212,11 @@ class TestGameSession:
     @patch("src.backend.game_manager.MaskablePPO")
     @patch("os.path.getctime")
     @patch("glob.glob")
-    def test_get_current_state_finished_game(self, mock_glob, mock_getctime, mock_ppo_class, mock_cf):
+    def test_get_current_state_finished_game(
+        self, mock_glob, mock_getctime, mock_ppo_class, mock_cf
+    ):
         """Test get_current_state returns correct structure when game is done."""
-        # TODO(human): Set mock_env.agents = [] to simulate finished game
+        # Set mock_env.agents = [] to simulate finished game
         # Verify done=True and empty observation/action_mask
         # mock the call to glob.glob for finding the filepath to the latest model
         mock_glob.return_value = ["checkpoints/connect_four_v3/test.zip"]
@@ -252,9 +254,11 @@ class TestGameSession:
     @patch("src.backend.game_manager.MaskablePPO")
     @patch("os.path.getctime")
     @patch("glob.glob")
-    def test_make_move_valid_action(self, mock_glob, mock_getctime, mock_ppo_class, mock_cf):
+    def test_make_move_valid_action(
+        self, mock_glob, mock_getctime, mock_ppo_class, mock_cf
+    ):
         """Test make_move executes valid action and returns correct response."""
-        # TODO(human): Call make_move with valid action, verify env.step was called
+        # Call make_move with valid action, verify env.step was called
         # Check returned tuple (state, reward, done) has correct types
         # mock the call to glob.glob for finding the filepath to the latest model
         mock_glob.return_value = ["checkpoints/connect_four_v3/test.zip"]
@@ -314,7 +318,7 @@ class TestGameSession:
         self, mock_glob, mock_getctime, mock_ppo_class, mock_cf
     ):
         """Test make_move raises ValueError when game is already finished."""
-        # TODO(human): Set game to finished state, use pytest.raises to catch ValueError
+        # Set game to finished state, use pytest.raises to catch ValueError
         # mock the call to glob.glob for finding the filepath to the latest model
         mock_glob.return_value = ["checkpoints/connect_four_v3/test.zip"]
         mock_getctime.return_value = 123456789
@@ -337,9 +341,11 @@ class TestGameSession:
     @patch("src.backend.game_manager.MaskablePPO")
     @patch("os.path.getctime")
     @patch("glob.glob")
-    def test_get_ai_move_calls_model_predict(self, mock_glob, mock_getctime, mock_ppo_class, mock_cf):
+    def test_get_ai_move_calls_model_predict(
+        self, mock_glob, mock_getctime, mock_ppo_class, mock_cf
+    ):
         """Test get_ai_move calls model.predict with correct parameters."""
-        # TODO(human): Verify model.predict is called with observation, action_mask, deterministic=True
+        # Verify model.predict is called with observation, action_mask, deterministic=True
         # Check that env.step is called with the predicted action
         # mock the call to glob.glob for finding the filepath to the latest model
         mock_glob.return_value = ["checkpoints/connect_four_v3/test.zip"]
@@ -384,9 +390,11 @@ class TestGameSession:
     @patch("src.backend.game_manager.MaskablePPO")
     @patch("os.path.getctime")
     @patch("glob.glob")
-    def test_get_ai_move_returns_integer(self, mock_glob, mock_getctime, mock_ppo_class, mock_cf):
+    def test_get_ai_move_returns_integer(
+        self, mock_glob, mock_getctime, mock_ppo_class, mock_cf
+    ):
         """Test get_ai_move returns action as Python int, not numpy type."""
-        # TODO(human): Verify return type is int (not np.int64 or other numpy type)
+        # Verify return type is int (not np.int64 or other numpy type)
         # mock the call to glob.glob for finding the filepath to the latest model
         mock_glob.return_value = ["checkpoints/connect_four_v3/test.zip"]
         mock_getctime.return_value = 123456789
@@ -409,11 +417,11 @@ class TestGameSession:
 class TestGameManager:
     """Test suite for GameManager class."""
 
-    # TODO(human): Implement the test bodies below
+    # Implement the test bodies below
 
     def test_game_manager_initialization(self):
         """Test GameManager initializes with empty sessions dictionary."""
-        # TODO(human): Create GameManager and verify sessions is an empty dict
+        # Create GameManager and verify sessions is an empty dict
         game_manager = GameManager()
 
         assert isinstance(game_manager.sessions, dict)
@@ -422,7 +430,7 @@ class TestGameManager:
     @patch("src.backend.game_manager.GameSession")
     def test_create_game_default_model(self, mock_session_class):
         """Test create_game creates session and stores it correctly."""
-        # TODO(human): Mock GameSession to return a session with a test ID
+        # Mock GameSession to return a session with a test ID
         # Verify the session is stored in manager.sessions dict
         mock_game_session = Mock()
         mock_game_session.session_id = "test-session"
@@ -438,7 +446,7 @@ class TestGameManager:
     @patch("src.backend.game_manager.GameSession")
     def test_create_game_with_custom_model_path(self, mock_session_class):
         """Test create_game passes custom model_path to GameSession."""
-        # TODO(human): Verify GameSession is called with the custom model path
+        # Verify GameSession is called with the custom model path
         mock_game_session = Mock()
         mock_game_session.session_id = "test-session"
         mock_session_class.return_value = mock_game_session
@@ -448,14 +456,12 @@ class TestGameManager:
             "connect_four", model_path="custom_model"
         )
 
-        mock_session_class.assert_called_once_with(
-            "connect_four", "custom_model"
-        )
+        mock_session_class.assert_called_once_with("connect_four", "custom_model")
 
     @patch("src.backend.game_manager.GameSession")
     def test_get_session_exists(self, mock_session_class):
         """Test get_session retrieves existing session."""
-        # TODO(human): Create a session, then retrieve it by ID
+        # Create a session, then retrieve it by ID
         mock_game_session = Mock()
         mock_game_session.session_id = "test-session"
         mock_session_class.return_value = mock_game_session
@@ -470,7 +476,7 @@ class TestGameManager:
 
     def test_get_session_not_exists(self):
         """Test get_session returns None for non-existent session."""
-        # TODO(human): Call get_session with fake ID, verify None returned
+        # Call get_session with fake ID, verify None returned
         game_manager = GameManager()
         retrieved_session = game_manager.get_session("fake-session")
         assert retrieved_session is None
@@ -478,7 +484,7 @@ class TestGameManager:
     @patch("src.backend.game_manager.GameSession")
     def test_delete_session_closes_environment(self, mock_session_class):
         """Test delete_session closes the environment and removes session."""
-        # TODO(human): Create session with mock env, delete it, verify env.close() called
+        # Create session with mock env, delete it, verify env.close() called
         mock_game_session = Mock()
         mock_game_session.session_id = "test-session"
         mock_env = Mock()
@@ -499,14 +505,14 @@ class TestGameManager:
 
     def test_delete_session_nonexistent_does_not_error(self):
         """Test deleting non-existent session doesn't raise exception."""
-        # TODO(human): Call delete with fake ID, verify no exception raised
+        # Call delete with fake ID, verify no exception raised
         game_manager = GameManager()
         game_manager.delete_session("fake-session-id")
 
     @patch("src.backend.game_manager.GameSession")
     def test_multiple_concurrent_sessions(self, mock_session_class):
         """Test managing multiple game sessions simultaneously."""
-        # TODO(human): Create 3+ sessions, verify all are tracked independently
+        # Create 3+ sessions, verify all are tracked independently
         # Delete one, verify others remain intact
         mock_session1 = Mock()
         mock_session1.session_id = "session1"
