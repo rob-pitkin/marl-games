@@ -1,6 +1,6 @@
 # MARL Games Web App - Project Status
 
-**Last Updated:** 2025-10-17
+**Last Updated:** 2025-10-21
 
 ## 🎯 Learning Approach
 
@@ -43,8 +43,8 @@ src/backend/
 **API Endpoints:**
 1. `GET /` - Health check
 2. `POST /game/start` - Start new game (returns session_id)
-3. `POST /game/move` - Make player move
-4. `POST /game/ai-move?session_id={id}` - Get AI response
+3. `POST /game/move` - Make player move (returns reward for winner detection)
+4. `POST /game/ai-move?session_id={id}` - Get AI response (returns reward + done flag)
 5. `GET /game/state/{session_id}` - Get current state
 6. `DELETE /game/{session_id}` - Clean up session
 
@@ -64,7 +64,7 @@ src/backend/
 - Models accept `Any` type for observations (multi-dimensional arrays)
 
 ### Frontend (Next.js + TypeScript + shadcn/ui)
-**Status:** ✅ Connect Four playable!
+**Status:** ✅ Connect Four fully functional with polished UI!
 
 **Structure:**
 ```
@@ -76,22 +76,27 @@ frontend/
 ├── components/
 │   ├── game/
 │   │   └── ConnectFourBoard.tsx  # Main game component
-│   └── ui/                # shadcn components (Button, Card)
+│   └── ui/                # shadcn components
 │       ├── button.tsx
-│       └── card.tsx
+│       ├── card.tsx
+│       ├── select.tsx     # Player order selection
+│       ├── badge.tsx      # Game status badges
+│       └── alert.tsx      # Game over alerts
 ├── lib/
-│   ├── api-client.ts      # API service layer
+│   ├── api-client.ts      # API service layer (includes reward field)
 │   └── utils.ts           # shadcn utilities
 └── package.json
 ```
 
 **Key Features:**
 - ✅ Full game loop: start → player move → AI response → win/draw detection
+- ✅ **Player order selection** - Choose to play first (Red) or second (Yellow)
 - ✅ TypeScript interfaces matching backend Pydantic models
 - ✅ Agent-relative observation decoding (3D array → 2D board)
-- ✅ Proper winner detection from reward values
+- ✅ **Proper winner detection** for all scenarios (human wins, AI wins, draws)
 - ✅ Natural AI response delay (800ms)
-- ✅ Visual feedback (disabled states, AI thinking indicator)
+- ✅ **Polished UI** with gradient title, badges, alerts, and improved layout
+- ✅ Visual feedback (disabled states, AI thinking indicator, hover effects)
 - ✅ Error handling and display
 
 **Tech Stack:**
@@ -103,7 +108,8 @@ frontend/
 **User Implementations:**
 - All 5 API client methods (fetch with error handling)
 - Observation-to-board conversion with agent-relative decoding
-- Winner determination logic
+- Winner determination logic with player order support
+- AI first-move trigger when playing second
 - Cell color mapping function
 
 **Frontend Key Learnings:**
@@ -117,23 +123,24 @@ frontend/
 
 ## 🚧 In Progress / Next Steps
 
-### **Next Up: Connect Four Enhancements**
+### **Next Up: Final Polish & Chess**
 
-**Before Moving to Chess:**
-1. **Player Order Selection** - Add UI to choose going first or second
-2. **UI Polish** - Add more shadcn components for better visual design
-   - Add Select component for choosing player order
-   - Improve game status display with badges or alerts
-   - Add animations for piece drops
-   - Better mobile responsiveness
+**Connect Four - Remaining Polish:**
+- [ ] Piece drop animations (optional)
+- [ ] Mobile responsiveness improvements
+- [ ] Additional UI refinements
 
-### **After Connect Four Polish: Chess Implementation**
-- Similar component structure to Connect Four
-- Chess board rendering (8x8 grid)
-- Piece movement visualization
-- Legal move highlighting
+**Chess Implementation:**
+- [ ] Chess board component (8x8 grid)
+- [ ] Chess piece rendering (Unicode or SVG)
+- [ ] Move input system (click piece → click destination)
+- [ ] Legal move visualization
+- [ ] Chess notation display
+- [ ] Integrate with existing backend (already supports chess)
 
-**Deployment Target:** Vercel
+**Deployment:**
+- [ ] Deploy to Vercel
+- [ ] Production environment configuration
 
 ---
 
@@ -322,8 +329,8 @@ dependencies = [
 ## 💡 Future Enhancements
 
 ### Near-term (Connect Four Polish)
-- [ ] Player order selection (choose to go first or second)
-- [ ] Better UI with more shadcn components (Select, Badge, Alert)
+- [x] Player order selection (choose to go first or second)
+- [x] Better UI with more shadcn components (Select, Badge, Alert)
 - [ ] Piece drop animations
 - [ ] Mobile responsive design
 - [ ] Game statistics (wins/losses tracking)
@@ -349,9 +356,9 @@ dependencies = [
 ## 📝 Notes for Next Session
 
 ### Current State
-- ✅ **Backend complete and tested** - 20/20 tests passing
-- ✅ **Frontend working** - Connect Four playable at http://localhost:3000
-- 🚧 **Next priority:** Player order selection + UI polish before Chess
+- ✅ **Backend complete and tested** - 20/20 tests passing (updated for reward in AI response)
+- ✅ **Connect Four complete** - Fully functional with player order selection and polished UI
+- 🚧 **Next priority:** Chess implementation (backend already supports it!)
 
 ### To Resume Work
 ```bash
@@ -366,11 +373,11 @@ npm run dev
 # Open browser to http://localhost:3000
 ```
 
-### Next Session Goals (Connect Four Enhancements)
-1. Add player order selection UI (Select component from shadcn)
-2. Improve game status display (Badge/Alert components)
-3. Consider piece drop animations
-4. Test mobile responsiveness
+### Next Session Goals
+1. **Chess Board Component** - Create 8x8 grid with piece rendering
+2. **Move Input System** - Click-based move selection
+3. **Chess Game Integration** - Connect to backend chess endpoints
+4. **Optional:** Final Connect Four polish (animations, mobile)
 
 ---
 
@@ -420,3 +427,34 @@ npm run dev
 - State updates are asynchronous - use local variables when needed
 - Disabled button logic with multiple conditions
 - Error boundaries and try/catch for API calls
+
+### Session 3: Player Order Selection & Winner Detection (Oct 21)
+**UI Polish with shadcn/ui:**
+- Installing and using shadcn components (Select, Badge, Alert)
+- Component composition patterns with shadcn
+- Gradient text effects and improved visual hierarchy
+- Hover effects and transitions for better UX
+
+**Complex Game State Management:**
+- Player order affects player_id assignment (first=player_0, second=player_1)
+- Handling AI first-move when user chooses to play second
+- Winner determination based on who made the last move
+- Understanding reward perspective in multi-agent RL
+
+**Backend API Evolution:**
+- Adding reward field to AIResponse for draw detection
+- Returning done status directly from get_ai_move() for reliability
+- Updating test suite when method signatures change
+- Importance of complete state information in API responses
+
+**Key Bug Fixes:**
+- Reward interpretation: In PettingZoo, reward is from next player's perspective
+- Done flag: Explicitly returning from environment instead of relying on instance variable
+- Grammar: Conditional text ("You win!" vs "AI wins!") based on player name
+- Player ID mapping: Correctly determining human/AI player_id based on turn order
+
+**What Worked Well:**
+- Iterative debugging with console.log to trace issues
+- User implementing logic with guidance and review
+- Backend tests catching regressions immediately
+- Learning by doing approach for complex state logic
