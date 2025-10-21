@@ -87,7 +87,7 @@ async def get_ai_move(session_id: str):
     if curr_session is None:
         raise HTTPException(status_code=404, detail="Session not found.")
 
-    ai_action = curr_session.get_ai_move()
+    ai_action, reward, done = curr_session.get_ai_move()
     new_state = curr_session.get_current_state()
     return {
         "ai_action": ai_action,
@@ -95,7 +95,8 @@ async def get_ai_move(session_id: str):
         "action_mask": new_state["action_mask"],
         "valid_actions": new_state["valid_actions"],
         "current_player": new_state["current_player"],
-        "done": curr_session.done,
+        "done": done,
+        "reward": reward,
     }
 
 

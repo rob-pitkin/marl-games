@@ -92,8 +92,8 @@ class GameSession:
         obs, reward, termination, truncation, _ = self.env.last()
         return self.get_current_state(), float(reward), termination or truncation
 
-    def get_ai_move(self) -> int:
-        """Get the AI's move for the current state."""
+    def get_ai_move(self) -> tuple[int, float, bool]:
+        """Get the AI's move for the current state. Returns (action, reward, done)."""
         obs, reward, termination, truncation, info = self.env.last()
         observation, action_mask = obs.values()
         ai_action = int(
@@ -103,7 +103,10 @@ class GameSession:
         )
         self.env.step(ai_action)
         self._advance_to_next_observation()
-        return ai_action
+        # Get the reward and done status after the AI's move
+        _, new_reward, new_termination, new_truncation, _ = self.env.last()
+        done = new_termination or new_truncation
+        return ai_action, float(new_reward), done
 
 
 class GameManager:

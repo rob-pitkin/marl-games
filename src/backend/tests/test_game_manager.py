@@ -363,9 +363,11 @@ class TestGameSession:
         session = GameSession("connect_four")
 
         current_state = session.get_current_state()
-        ai_action = session.get_ai_move()
+        ai_action, reward, done = session.get_ai_move()
 
         assert isinstance(ai_action, int)
+        assert isinstance(reward, float)
+        assert isinstance(done, bool)
         test_model.predict.assert_called_once()
 
         # Inspect what was actually passed
@@ -410,8 +412,10 @@ class TestGameSession:
 
         session = GameSession("connect_four")
 
-        ai_action = session.get_ai_move()
+        ai_action, reward, done = session.get_ai_move()
         assert isinstance(ai_action, int)
+        assert isinstance(reward, float)
+        assert isinstance(done, bool)
 
 
 class TestGameManager:

@@ -40,6 +40,7 @@ export interface AIResponse {
 	valid_actions: number[];
 	current_player: string;
 	done: boolean;
+	reward: number;
 }
 
 export interface GameState {
