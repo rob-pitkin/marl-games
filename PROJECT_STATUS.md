@@ -1,6 +1,6 @@
 # MARL Games Web App - Project Status
 
-**Last Updated:** 2025-10-21
+**Last Updated:** 2025-10-30
 
 ## 🎯 Learning Approach
 
@@ -64,31 +64,33 @@ src/backend/
 - Models accept `Any` type for observations (multi-dimensional arrays)
 
 ### Frontend (Next.js + TypeScript + shadcn/ui)
-**Status:** ✅ Connect Four fully functional with polished UI!
+**Status:** ✅ Connect Four fully functional! 🚧 Chess UI complete (untested - needs trained model)
 
 **Structure:**
 ```
 frontend/
 ├── app/
-│   ├── page.tsx           # Home page with Connect Four game
+│   ├── page.tsx           # Home page with tab navigation
 │   ├── layout.tsx         # Root layout
 │   └── globals.css        # Tailwind styles
 ├── components/
 │   ├── game/
-│   │   └── ConnectFourBoard.tsx  # Main game component
+│   │   ├── ConnectFourBoard.tsx  # Connect Four component ✅
+│   │   └── ChessBoard.tsx        # Chess component 🚧
 │   └── ui/                # shadcn components
 │       ├── button.tsx
 │       ├── card.tsx
 │       ├── select.tsx     # Player order selection
 │       ├── badge.tsx      # Game status badges
-│       └── alert.tsx      # Game over alerts
+│       ├── alert.tsx      # Game over alerts
+│       └── tabs.tsx       # Tab navigation
 ├── lib/
 │   ├── api-client.ts      # API service layer (includes reward field)
 │   └── utils.ts           # shadcn utilities
 └── package.json
 ```
 
-**Key Features:**
+**Connect Four Features (✅ Complete):**
 - ✅ Full game loop: start → player move → AI response → win/draw detection
 - ✅ **Player order selection** - Choose to play first (Red) or second (Yellow)
 - ✅ TypeScript interfaces matching backend Pydantic models
@@ -99,18 +101,44 @@ frontend/
 - ✅ Visual feedback (disabled states, AI thinking indicator, hover effects)
 - ✅ Error handling and display
 
+**Chess Features (🚧 UI Complete, Untested):**
+- ✅ **Tab navigation** - Switch between Chess and Connect Four games
+- ✅ **8x8 chess board** with Unicode piece symbols (♔♕♖♗♘♙)
+- ✅ **Observation decoding** - Converts 111-channel observation (channels 7-18 for pieces) to 2D board
+- ✅ **Coordinates to UCI conversion** - Converts row/col to chess notation (e.g., "e2e4")
+- ✅ **Coordinates to action encoding** - Converts moves to action numbers (0-4671)
+  - Implements 8-direction queen moves (planes 0-55)
+  - Implements 8 knight L-shape moves (planes 56-63)
+  - Formula: `action = sourceCol * 584 + sourceRow * 73 + plane`
+- ✅ **Two-click move system** - Click piece → click destination
+- ✅ **Piece color validation** - Only allow selecting your own pieces
+- ✅ **Player order selection** - Choose White (first) or Black (second)
+- ⚠️ **Move highlighting** - Skipped (would require decoding all 73 movement planes)
+- ⚠️ **Untested** - Needs trained chess model to verify action encoding and observation decoding
+
 **Tech Stack:**
 - Next.js 15 with App Router and Turbopack
 - TypeScript for type safety
 - Tailwind CSS v4 for styling
-- shadcn/ui component library
+- shadcn/ui component library (Button, Card, Select, Badge, Alert, Tabs)
 
-**User Implementations:**
+**User Implementations (Connect Four):**
 - All 5 API client methods (fetch with error handling)
 - Observation-to-board conversion with agent-relative decoding
 - Winner determination logic with player order support
 - AI first-move trigger when playing second
 - Cell color mapping function
+
+**User Implementations (Chess):**
+- `coordinatesToUCI()` - Converts grid coordinates to UCI notation
+- `coordinatesToAction()` - Encodes moves into action space (0-4671)
+  - Direction calculation for sliding moves (N/NE/E/SE/S/SW/W/NW)
+  - Distance calculation for queen moves
+  - Knight move pattern matching
+  - Plane calculation and action formula
+- `observationToBoard()` - Decodes channels 7-18 to piece codes
+- `handleSquareClick()` - Two-click move system with validation
+- Piece color detection and filtering
 
 **Frontend Key Learnings:**
 1. **Agent-relative observations:** Observations encode board from current player's perspective
@@ -123,20 +151,21 @@ frontend/
 
 ## 🚧 In Progress / Next Steps
 
-### **Next Up: Final Polish & Chess**
+### **Next Up: Chess Model Training & Testing**
 
-**Connect Four - Remaining Polish:**
-- [ ] Piece drop animations (optional)
+**Chess - Critical Path:**
+- [ ] **Train chess model** - Backend expects trained model but chess training has issues
+  - Backend may have observation space or action masking issues (needs investigation)
+  - PettingZoo chess_v6 environment might need debugging
+  - Action space encoding (4672 actions) is complex - verify training setup
+- [ ] **Test chess UI end-to-end** - Verify action encoding and observation decoding work correctly
+- [ ] **Debug any issues** - Frontend action encoding might have bugs (untested with real backend)
+- [ ] **Add move highlighting** (optional) - Would require decoding all valid action planes to destination squares
+
+**Connect Four - Optional Polish:**
+- [ ] Piece drop animations
 - [ ] Mobile responsiveness improvements
 - [ ] Additional UI refinements
-
-**Chess Implementation:**
-- [ ] Chess board component (8x8 grid)
-- [ ] Chess piece rendering (Unicode or SVG)
-- [ ] Move input system (click piece → click destination)
-- [ ] Legal move visualization
-- [ ] Chess notation display
-- [ ] Integrate with existing backend (already supports chess)
 
 **Deployment:**
 - [ ] Deploy to Vercel
@@ -356,9 +385,10 @@ dependencies = [
 ## 📝 Notes for Next Session
 
 ### Current State
-- ✅ **Backend complete and tested** - 20/20 tests passing (updated for reward in AI response)
-- ✅ **Connect Four complete** - Fully functional with player order selection and polished UI
-- 🚧 **Next priority:** Chess implementation (backend already supports it!)
+- ✅ **Backend complete and tested** - 20/20 tests passing (generic, supports both games)
+- ✅ **Connect Four complete** - Fully functional with trained model and polished UI
+- 🚧 **Chess UI complete** - Frontend built but untested (no trained model yet)
+- ⚠️ **Next priority:** Train chess model and debug any training/inference issues
 
 ### To Resume Work
 ```bash
@@ -374,10 +404,10 @@ npm run dev
 ```
 
 ### Next Session Goals
-1. **Chess Board Component** - Create 8x8 grid with piece rendering
-2. **Move Input System** - Click-based move selection
-3. **Chess Game Integration** - Connect to backend chess endpoints
-4. **Optional:** Final Connect Four polish (animations, mobile)
+1. **Train Chess Model** - Debug and fix chess training issues (observation space or action masking)
+2. **Test Chess UI** - Play against trained model, verify action encoding works
+3. **Debug Issues** - Fix any bugs in frontend action space encoding or backend integration
+4. **Optional:** Add move highlighting by decoding action planes to destination squares
 
 ---
 
@@ -458,3 +488,44 @@ npm run dev
 - User implementing logic with guidance and review
 - Backend tests catching regressions immediately
 - Learning by doing approach for complex state logic
+
+### Session 4: Chess UI Implementation (Oct 30)
+**Complex Action Space Encoding:**
+- Understanding PettingZoo's 8×8×73 flattened action space (4672 total actions)
+- Breaking down action encoding into source coordinates + movement plane
+- Implementing 8-direction compass mapping (N/NE/E/SE/S/SW/W/NW)
+- Queen move encoding: `plane = direction * 7 + (distance - 1)`
+- Knight move pattern matching: checking for (±2,±1) or (±1,±2) deltas
+- Action formula: `action = sourceCol * (8 * 73) + sourceRow * 73 + plane`
+
+**Chess Observation Decoding:**
+- Reading PettingZoo documentation to understand 111-channel observation format
+- Identifying channels 7-18 as piece positions (12 piece types: wP/wN/wB/wR/wQ/wK and bP/bN/bB/bR/bQ/bK)
+- Channels 0-6 encode game metadata (castling rights, turn color, move clock, board edges)
+- Channels 19-111 encode board history for repetition detection
+- Creating lookup table to map channel numbers to piece codes
+
+**Design Decisions:**
+- **Keeping backend generic** - Rejected chess-specific backend changes to maintain extensibility
+- All game-specific logic stays in frontend components
+- Frontend decodes observations and encodes actions specific to each game
+- Backend remains a thin generic layer over PettingZoo environments
+
+**React + TypeScript Patterns:**
+- Using shadcn Tabs component for game navigation
+- Two-click state management with `selectedSquare` state
+- Piece color validation based on player order
+- Validation before making moves (checking if action is in `validActions`)
+
+**Mathematical Problem Solving:**
+- Recognizing that hypotenuse doesn't uniquely identify move types
+- Using pattern matching (discrete checks) over geometric formulas for game moves
+- Knight detection: exact delta matching `(abs(dr)===2 && abs(dc)===1) || (abs(dr)===1 && abs(dc)===2)`
+- Direction detection: checking signs of deltaRow and deltaCol combinations
+
+**Key Learnings:**
+- Complex action spaces can be broken down systematically (coordinates + planes)
+- Pattern matching beats mathematical formulas for discrete game move encoding
+- Documentation reading is critical for understanding RL environment specifics
+- Always validate game-specific changes don't break backend genericity
+- User successfully implemented all chess-specific encoding/decoding logic!
