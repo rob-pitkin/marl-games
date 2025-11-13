@@ -3,7 +3,7 @@ import glob
 import os
 import numpy as np
 from typing import Dict, Optional, Tuple, Any
-from pettingzoo.classic import connect_four_v3, chess_v6
+from pettingzoo.classic import connect_four_v3, tictactoe_v3
 from sb3_contrib import MaskablePPO
 
 
@@ -31,8 +31,8 @@ class GameSession:
         match self.game_type:
             case "connect_four":
                 self.env = connect_four_v3.env()
-            case "chess":
-                self.env = chess_v6.env()
+            case "tictactoe":
+                self.env = tictactoe_v3.env()
 
         # Load the model (use latest if not specified)
         if model_path is None:

@@ -66,38 +66,6 @@ class TestGameSession:
         test_env.reset.assert_called_once()
         mock_ppo_class.load.assert_called_once()
 
-    @patch("src.backend.game_manager.chess_v6")
-    @patch("src.backend.game_manager.MaskablePPO")
-    @patch("os.path.getctime")
-    @patch("glob.glob")
-    def test_game_session_initialization_chess(
-        self, mock_glob, mock_getctime, mock_ppo_class, mock_chess
-    ):
-        """Test GameSession initializes correctly for Chess."""
-        # Similar to connect_four test but for chess_v6
-        # mock the call to glob.glob for finding the filepath to the latest model
-        mock_glob.return_value = ["checkpoints/chess_v6/test.zip"]
-        mock_getctime.return_value = 123456789
-
-        # mock the call to MaskablePPO for loading the model
-        test_model = create_mock_model()
-        mock_ppo_class.load.return_value = test_model
-
-        # mock the environment (chess)
-        test_env = create_mock_env("chess_v6")
-        mock_chess.env.return_value = test_env
-
-        session = GameSession("chess")
-        assert session.session_id is not None
-        assert session.game_type == "chess"
-        assert session.env == test_env
-        assert session.model == test_model
-
-        # verify mocks were used
-        mock_chess.env.assert_called_once()
-        test_env.reset.assert_called_once()
-        mock_ppo_class.load.assert_called_once()
-
     def test_serialize_value_numpy_array(self):
         """Test _serialize_value converts numpy arrays to lists."""
         # Create a numpy array and verify it returns a Python list
@@ -530,7 +498,7 @@ class TestGameManager:
         game_manager = GameManager()
         session1 = game_manager.create_game("connect_four")
         session2 = game_manager.create_game("connect_four")
-        session3 = game_manager.create_game("chess")
+        session3 = game_manager.create_game("tictactoe")
 
         # Verify all three are stored
         assert len(game_manager.sessions) == 3

@@ -37,7 +37,7 @@ async def start_game(request: GameStartRequest):
     Returns the initial game state and session ID.
     """
     game_type = request.game_type
-    if game_type not in ["connect_four", "chess"]:
+    if game_type not in ["connect_four", "tictactoe"]:
         raise HTTPException(status_code=400, detail="Invalid game type")
 
     model_path = request.model_path

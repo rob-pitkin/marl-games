@@ -5,7 +5,7 @@ from typing import List, Optional, Dict, Any
 class GameStartRequest(BaseModel):
     """Request to start a new game."""
 
-    game_type: str  # "connect_four" or "chess"
+    game_type: str  # "connect_four" or "tictactoe"
     model_path: Optional[str] = None  # If None, use latest model
 
 

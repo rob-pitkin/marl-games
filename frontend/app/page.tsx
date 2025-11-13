@@ -1,5 +1,5 @@
 import { ConnectFourBoard } from "@/components/game/ConnectFourBoard";
-import { ChessBoard } from "@/components/game/ChessBoard";
+import { TicTacToeBoard } from "@/components/game/TicTacToeBoard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Home() {
@@ -13,16 +13,16 @@ export default function Home() {
 					</p>
 				</div>
 
-				<Tabs defaultValue="chess" className="w-full max-w-4xl">
+				<Tabs defaultValue="connect_four" className="w-full max-w-4xl">
 					<TabsList className="grid w-full grid-cols-2">
-						<TabsTrigger value="chess">♔ Chess</TabsTrigger>
 						<TabsTrigger value="connect_four">🔴 Connect Four</TabsTrigger>
+						<TabsTrigger value="tictactoe">❌ Tic-Tac-Toe</TabsTrigger>
 					</TabsList>
-					<TabsContent value="chess" className="mt-6">
-						<ChessBoard />
-					</TabsContent>
 					<TabsContent value="connect_four" className="mt-6">
 						<ConnectFourBoard />
+					</TabsContent>
+					<TabsContent value="tictactoe" className="mt-6">
+						<TicTacToeBoard />
 					</TabsContent>
 				</Tabs>
 			</main>

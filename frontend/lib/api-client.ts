@@ -6,7 +6,7 @@
 // ============================================================================
 
 export interface StartGameRequest {
-	game_type: "connect_four" | "chess";
+	game_type: "connect_four" | "tictactoe";
 }
 
 export interface StartGameResponse {
@@ -69,7 +69,7 @@ class GameAPIClient {
 	 * POST /game/start
 	 */
 	async startGame(
-		gameType: "connect_four" | "chess",
+		gameType: "connect_four" | "tictactoe",
 	): Promise<StartGameResponse> {
 		// - Create the request body with game_type
 		// - Send POST request to `${this.baseURL}/game/start`
