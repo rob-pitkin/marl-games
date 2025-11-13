@@ -1,6 +1,6 @@
 # MARL Games Web App - Project Status
 
-**Last Updated:** 2025-10-30
+**Last Updated:** 2025-11-13
 
 ## 🎯 Learning Approach
 
@@ -13,7 +13,7 @@
 This approach was successfully used for the backend tests where Claude provided test function names and TODO comments, and the user implemented the bodies.
 
 ## 🎯 Project Goal
-Create a web application to play Connect Four and Chess against trained multi-agent reinforcement learning models. Backend serves trained PPO models via REST API, frontend (Next.js + shadcn + Tailwind) provides interactive UI.
+Create a web application to play Connect Four and Tic-Tac-Toe against trained multi-agent reinforcement learning models. Backend serves trained PPO models via REST API, frontend (Next.js + shadcn + Tailwind) provides interactive UI.
 
 ---
 
@@ -64,7 +64,7 @@ src/backend/
 - Models accept `Any` type for observations (multi-dimensional arrays)
 
 ### Frontend (Next.js + TypeScript + shadcn/ui)
-**Status:** ✅ Connect Four fully functional! 🚧 Chess UI complete (untested - needs trained model)
+**Status:** ✅ Both games fully functional!
 
 **Structure:**
 ```
@@ -76,7 +76,7 @@ frontend/
 ├── components/
 │   ├── game/
 │   │   ├── ConnectFourBoard.tsx  # Connect Four component ✅
-│   │   └── ChessBoard.tsx        # Chess component 🚧
+│   │   └── TicTacToeBoard.tsx    # Tic-Tac-Toe component ✅
 │   └── ui/                # shadcn components
 │       ├── button.tsx
 │       ├── card.tsx
@@ -98,23 +98,17 @@ frontend/
 - ✅ **Proper winner detection** for all scenarios (human wins, AI wins, draws)
 - ✅ Natural AI response delay (800ms)
 - ✅ **Polished UI** with gradient title, badges, alerts, and improved layout
+
+**Tic-Tac-Toe Features (✅ Complete):**
+- ✅ Full game loop with trained AI opponent
+- ✅ **Player order selection** - Choose to play first (X) or second (O)
+- ✅ **Column-major action encoding** - Correctly handles PettingZoo's action space (0-8)
+- ✅ **3×3 grid rendering** - Large, bold, colored symbols (blue X, green O)
+- ✅ Agent-relative observation decoding (3×3×2 array → 2D board)
+- ✅ **Styled UI** - Consistent visual design with inline styled symbols
+- ✅ Tab navigation to switch between games
 - ✅ Visual feedback (disabled states, AI thinking indicator, hover effects)
 - ✅ Error handling and display
-
-**Chess Features (🚧 UI Complete, Untested):**
-- ✅ **Tab navigation** - Switch between Chess and Connect Four games
-- ✅ **8x8 chess board** with Unicode piece symbols (♔♕♖♗♘♙)
-- ✅ **Observation decoding** - Converts 111-channel observation (channels 7-18 for pieces) to 2D board
-- ✅ **Coordinates to UCI conversion** - Converts row/col to chess notation (e.g., "e2e4")
-- ✅ **Coordinates to action encoding** - Converts moves to action numbers (0-4671)
-  - Implements 8-direction queen moves (planes 0-55)
-  - Implements 8 knight L-shape moves (planes 56-63)
-  - Formula: `action = sourceCol * 584 + sourceRow * 73 + plane`
-- ✅ **Two-click move system** - Click piece → click destination
-- ✅ **Piece color validation** - Only allow selecting your own pieces
-- ✅ **Player order selection** - Choose White (first) or Black (second)
-- ⚠️ **Move highlighting** - Skipped (would require decoding all 73 movement planes)
-- ⚠️ **Untested** - Needs trained chess model to verify action encoding and observation decoding
 
 **Tech Stack:**
 - Next.js 15 with App Router and Turbopack
@@ -129,16 +123,13 @@ frontend/
 - AI first-move trigger when playing second
 - Cell color mapping function
 
-**User Implementations (Chess):**
-- `coordinatesToUCI()` - Converts grid coordinates to UCI notation
-- `coordinatesToAction()` - Encodes moves into action space (0-4671)
-  - Direction calculation for sliding moves (N/NE/E/SE/S/SW/W/NW)
-  - Distance calculation for queen moves
-  - Knight move pattern matching
-  - Plane calculation and action formula
-- `observationToBoard()` - Decodes channels 7-18 to piece codes
-- `handleSquareClick()` - Two-click move system with validation
-- Piece color detection and filtering
+**User Implementations (Tic-Tac-Toe):**
+- `observationToBoard()` - Handles column-major observation decoding (3×3×2 → 2D board)
+- Action encoding with column-major formula: `action = col * 3 + row`
+- Cell click handler with proper action validation
+- Symbol rendering with conditional styling (blue X, green O)
+- Board iteration matching column-major observation structure
+- Player order handling (player_1 vs player_2 instead of player_0/player_1)
 
 **Frontend Key Learnings:**
 1. **Agent-relative observations:** Observations encode board from current player's perspective
@@ -146,30 +137,30 @@ frontend/
 3. **React state async:** Can't use state value immediately after `setState()`, need local variable
 4. **API contract alignment:** TypeScript interfaces must exactly match backend Pydantic models
 5. **CORS setup:** Backend must allow frontend origin (localhost:3000)
+6. **Column-major vs row-major:** Different PettingZoo games use different indexing - must match observation, action, and rendering order
+7. **Agent naming:** Connect Four uses player_0/player_1, Tic-Tac-Toe uses player_1/player_2 - check docs for each game
 
 ---
 
 ## 🚧 In Progress / Next Steps
 
-### **Next Up: Chess Model Training & Testing**
+### **Optional Enhancements:**
 
-**Chess - Critical Path:**
-- [ ] **Train chess model** - Backend expects trained model but chess training has issues
-  - Backend may have observation space or action masking issues (needs investigation)
-  - PettingZoo chess_v6 environment might need debugging
-  - Action space encoding (4672 actions) is complex - verify training setup
-- [ ] **Test chess UI end-to-end** - Verify action encoding and observation decoding work correctly
-- [ ] **Debug any issues** - Frontend action encoding might have bugs (untested with real backend)
-- [ ] **Add move highlighting** (optional) - Would require decoding all valid action planes to destination squares
-
-**Connect Four - Optional Polish:**
-- [ ] Piece drop animations
+**Polish:**
+- [ ] Piece drop animations for Connect Four
 - [ ] Mobile responsiveness improvements
-- [ ] Additional UI refinements
+- [ ] Game statistics tracking (wins/losses)
+- [ ] Sound effects for moves and wins
+- [ ] Difficulty level selection (different trained models)
+
+**New Games:**
+- [ ] Add more PettingZoo classic games (Checkers, Go, etc.)
+- [ ] Train models with different hyperparameters for varying difficulty
 
 **Deployment:**
 - [ ] Deploy to Vercel
 - [ ] Production environment configuration
+- [ ] CI/CD pipeline setup
 
 ---
 
@@ -185,30 +176,37 @@ marl-games/
 │   │   └── tests/
 │   │       ├── __init__.py
 │   │       └── test_game_manager.py  # 20 tests, all passing
-│   ├── chess/             # Existing training code
+│   ├── tictactoe/         # ✅ Training code (working)
 │   │   └── main.py
-│   ├── connect_four/      # Existing training code
+│   ├── connect_four/      # ✅ Training code (working)
 │   │   └── main.py
 │   └── lib/               # Shared RL utilities
 │       ├── ppo.py
 │       └── utils.py
-├── frontend/              # ✅ Connect Four working!
+├── frontend/              # ✅ Both games working!
 │   ├── app/
 │   │   ├── page.tsx
 │   │   ├── layout.tsx
 │   │   └── globals.css
 │   ├── components/
 │   │   ├── game/
-│   │   │   └── ConnectFourBoard.tsx
+│   │   │   ├── ConnectFourBoard.tsx
+│   │   │   └── TicTacToeBoard.tsx
 │   │   └── ui/
 │   │       ├── button.tsx
-│   │       └── card.tsx
+│   │       ├── card.tsx
+│   │       ├── select.tsx
+│   │       ├── badge.tsx
+│   │       ├── alert.tsx
+│   │       └── tabs.tsx
 │   ├── lib/
 │   │   ├── api-client.ts
 │   │   └── utils.ts
 │   └── package.json
 ├── checkpoints/           # Trained models
-│   └── connect_four_v3/
+│   ├── connect_four_v3/
+│   │   └── *.zip
+│   └── tictactoe_v3/
 │       └── *.zip
 ├── pyproject.toml
 ├── test_api.py           # Manual API testing script
